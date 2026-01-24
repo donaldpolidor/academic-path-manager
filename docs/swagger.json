@@ -1,0 +1,477 @@
+﻿{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Academic Path Manager API",
+    "description": "API for managing academic paths in Computer Science and Social Sciences",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000",
+      "description": "Development server"
+    }
+  ],
+  "paths": {
+    "/api/courses": {
+      "get": {
+        "summary": "Get all courses",
+        "description": "Returns all courses, optionally filtered by field and level",
+        "parameters": [
+          {
+            "name": "field",
+            "in": "query",
+            "description": "Filter by field (computer_science or social_sciences)",
+            "schema": {
+              "type": "string",
+              "enum": ["computer_science", "social_sciences"]
+            }
+          },
+          {
+            "name": "level",
+            "in": "query",
+            "description": "Filter by level (beginner, intermediate, advanced)",
+            "schema": {
+              "type": "string",
+              "enum": ["beginner", "intermediate", "advanced"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "count": { "type": "integer" },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Course"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new course",
+        "description": "Creates a new course with validation",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Course created successfully"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/courses/{code}": {
+      "get": {
+        "summary": "Get course by code",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Course code",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Course found"
+          },
+          "404": {
+            "description": "Course not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a course",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Course code",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Course updated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Course not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a course",
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Course code",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Course deleted"
+          },
+          "404": {
+            "description": "Course not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/students": {
+      "get": {
+        "summary": "Get all students",
+        "parameters": [
+          {
+            "name": "field",
+            "in": "query",
+            "description": "Filter by field",
+            "schema": {
+              "type": "string",
+              "enum": ["computer_science", "social_sciences"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new student",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Student created"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/students/{id}": {
+      "get": {
+        "summary": "Get student by ID",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Student ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Student found"
+          },
+          "404": {
+            "description": "Student not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a student",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Student ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Student updated"
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "404": {
+            "description": "Student not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a student",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Student ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Student deleted"
+          },
+          "404": {
+            "description": "Student not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/students/{id}/enroll": {
+      "put": {
+        "summary": "Enroll student in a course",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Student ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "courseCode": {
+                    "type": "string",
+                    "description": "Course code to enroll in"
+                  },
+                  "courseTitle": {
+                    "type": "string",
+                    "description": "Course title"
+                  }
+                },
+                "required": ["courseCode", "courseTitle"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Student enrolled successfully"
+          },
+          "400": {
+            "description": "Validation error or already enrolled"
+          },
+          "404": {
+            "description": "Student not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Course": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "code": { "type": "string" },
+          "title": { "type": "string" },
+          "field": {
+            "type": "string",
+            "enum": ["computer_science", "social_sciences"]
+          },
+          "level": {
+            "type": "string",
+            "enum": ["beginner", "intermediate", "advanced"]
+          },
+          "credits": { "type": "integer", "minimum": 1, "maximum": 6 },
+          "description": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "CourseInput": {
+        "type": "object",
+        "required": ["code", "title", "field", "level", "credits"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Course code (e.g., CS101)",
+            "minLength": 2
+          },
+          "title": {
+            "type": "string",
+            "description": "Course title",
+            "minLength": 3
+          },
+          "field": {
+            "type": "string",
+            "enum": ["computer_science", "social_sciences"],
+            "description": "Academic field"
+          },
+          "level": {
+            "type": "string",
+            "enum": ["beginner", "intermediate", "advanced"],
+            "description": "Course level"
+          },
+          "credits": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 6,
+            "description": "Number of credits"
+          },
+          "description": {
+            "type": "string",
+            "description": "Course description"
+          }
+        }
+      },
+      "Student": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "studentId": { "type": "string" },
+          "firstName": { "type": "string" },
+          "lastName": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "field": {
+            "type": "string",
+            "enum": ["computer_science", "social_sciences"]
+          },
+          "enrolledCourses": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "courseCode": { "type": "string" },
+                "courseTitle": { "type": "string" },
+                "grade": {
+                  "type": "string",
+                  "enum": ["A", "B", "C", "D", "F", null]
+                }
+              }
+            }
+          },
+          "totalCredits": { "type": "integer" },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "StudentInput": {
+        "type": "object",
+        "required": ["studentId", "firstName", "lastName", "email", "field"],
+        "properties": {
+          "studentId": {
+            "type": "string",
+            "description": "Student ID",
+            "minLength": 3
+          },
+          "firstName": {
+            "type": "string",
+            "description": "First name",
+            "minLength": 2
+          },
+          "lastName": {
+            "type": "string",
+            "description": "Last name",
+            "minLength": 2
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address"
+          },
+          "field": {
+            "type": "string",
+            "enum": ["computer_science", "social_sciences"],
+            "description": "Academic field"
+          }
+        }
+      }
+    }
+  }
+}
