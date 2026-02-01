@@ -19,6 +19,7 @@ db.once('open', () => {
 });
 
 // Routes
+app.use('/api/auth', require('./routes/auth'));  // New auth routes
 app.use('/api/courses', require('./routes/courses'));
 app.use('/api/students', require('./routes/students'));
 
@@ -29,17 +30,26 @@ app.get('/', (req, res) => {
         message: 'Academic Path Manager API',
         version: '1.0.0',
         endpoints: {
+            auth: {
+                register: 'POST /api/auth/register',
+                login: 'POST /api/auth/login',
+                profile: 'GET /api/auth/profile'
+            },
             courses: {
                 getAll: 'GET /api/courses',
                 getOne: 'GET /api/courses/:code',
-                create: 'POST /api/courses',
+                create: 'POST /api/courses (Protected: Professor/Admin)',
+                update: 'PUT /api/courses/:code (Protected: Professor/Admin)',
+                delete: 'DELETE /api/courses/:code (Protected: Admin)',
                 query: '?field=computer_science&level=beginner'
             },
             students: {
-                getAll: 'GET /api/students',
-                getOne: 'GET /api/students/:id',
-                create: 'POST /api/students',
-                enroll: 'PUT /api/students/:id/enroll',
+                getAll: 'GET /api/students (Protected)',
+                getOne: 'GET /api/students/:id (Protected)',
+                create: 'POST /api/students (Protected: Professor/Admin)',
+                update: 'PUT /api/students/:id (Protected: Professor/Admin)',
+                enroll: 'PUT /api/students/:id/enroll (Protected)',
+                delete: 'DELETE /api/students/:id (Protected: Admin)',
                 query: '?field=computer_science'
             }
         }
@@ -56,11 +66,6 @@ app.get('/health', (req, res) => {
     });
 });
 
-// Port
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log('Server running on port ' + PORT);
-});
 // Swagger documentation endpoint
 app.get('/api-docs', (req, res) => {
     res.json(require('./docs/swagger.json'));
@@ -89,4 +94,10 @@ app.get('/docs', (req, res) => {
         </body>
         </html>
     `);
+});
+
+// Port
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log('Server running on port ' + PORT);
 });

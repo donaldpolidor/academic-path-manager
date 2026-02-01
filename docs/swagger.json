@@ -2,8 +2,8 @@
   "openapi": "3.0.0",
   "info": {
     "title": "Academic Path Manager API",
-    "description": "API for managing academic paths in Computer Science and Social Sciences",
-    "version": "1.0.0"
+    "description": "API for managing academic paths in Computer Science and Social Sciences with OAuth authentication",
+    "version": "2.0.0"
   },
   "servers": [
     {
@@ -15,349 +15,6 @@
       "description": "Development server"
     }
   ],
-  "paths": {
-    "/api/courses": {
-      "get": {
-        "summary": "Get all courses",
-        "description": "Returns all courses, optionally filtered by field and level",
-        "parameters": [
-          {
-            "name": "field",
-            "in": "query",
-            "description": "Filter by field (computer_science or social_sciences)",
-            "schema": {
-              "type": "string",
-              "enum": ["computer_science", "social_sciences"]
-            }
-          },
-          {
-            "name": "level",
-            "in": "query",
-            "description": "Filter by level (beginner, intermediate, advanced)",
-            "schema": {
-              "type": "string",
-              "enum": ["beginner", "intermediate", "advanced"]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": { "type": "boolean" },
-                    "count": { "type": "integer" },
-                    "data": {
-                      "type": "array",
-                      "items": {
-                        "$ref": "#/components/schemas/Course"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      },
-      "post": {
-        "summary": "Create a new course",
-        "description": "Creates a new course with validation",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CourseInput"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Course created successfully"
-          },
-          "400": {
-            "description": "Validation error"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      }
-    },
-    "/api/courses/{code}": {
-      "get": {
-        "summary": "Get course by code",
-        "parameters": [
-          {
-            "name": "code",
-            "in": "path",
-            "required": true,
-            "description": "Course code",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Course found"
-          },
-          "404": {
-            "description": "Course not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      },
-      "put": {
-        "summary": "Update a course",
-        "parameters": [
-          {
-            "name": "code",
-            "in": "path",
-            "required": true,
-            "description": "Course code",
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CourseInput"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Course updated"
-          },
-          "400": {
-            "description": "Validation error"
-          },
-          "404": {
-            "description": "Course not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete a course",
-        "parameters": [
-          {
-            "name": "code",
-            "in": "path",
-            "required": true,
-            "description": "Course code",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Course deleted"
-          },
-          "404": {
-            "description": "Course not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      }
-    },
-    "/api/students": {
-      "get": {
-        "summary": "Get all students",
-        "parameters": [
-          {
-            "name": "field",
-            "in": "query",
-            "description": "Filter by field",
-            "schema": {
-              "type": "string",
-              "enum": ["computer_science", "social_sciences"]
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful response"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      },
-      "post": {
-        "summary": "Create a new student",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/StudentInput"
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Student created"
-          },
-          "400": {
-            "description": "Validation error"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      }
-    },
-    "/api/students/{id}": {
-      "get": {
-        "summary": "Get student by ID",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "Student ID",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Student found"
-          },
-          "404": {
-            "description": "Student not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      },
-      "put": {
-        "summary": "Update a student",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "Student ID",
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/StudentInput"
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Student updated"
-          },
-          "400": {
-            "description": "Validation error"
-          },
-          "404": {
-            "description": "Student not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Delete a student",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "Student ID",
-            "schema": { "type": "string" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Student deleted"
-          },
-          "404": {
-            "description": "Student not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      }
-    },
-    "/api/students/{id}/enroll": {
-      "put": {
-        "summary": "Enroll student in a course",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "description": "Student ID",
-            "schema": { "type": "string" }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "courseCode": {
-                    "type": "string",
-                    "description": "Course code to enroll in"
-                  },
-                  "courseTitle": {
-                    "type": "string",
-                    "description": "Course title"
-                  }
-                },
-                "required": ["courseCode", "courseTitle"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Student enrolled successfully"
-          },
-          "400": {
-            "description": "Validation error or already enrolled"
-          },
-          "404": {
-            "description": "Student not found"
-          },
-          "500": {
-            "description": "Server error"
-          }
-        }
-      }
-    }
-  },
   "components": {
     "schemas": {
       "Course": {
@@ -473,6 +130,773 @@
             "type": "string",
             "enum": ["computer_science", "social_sciences"],
             "description": "Academic field"
+          }
+        }
+      },
+      "User": {
+        "type": "object",
+        "properties": {
+          "_id": { "type": "string" },
+          "username": { "type": "string" },
+          "email": { "type": "string", "format": "email" },
+          "role": {
+            "type": "string",
+            "enum": ["admin", "professor", "student"]
+          },
+          "createdAt": { "type": "string", "format": "date-time" }
+        }
+      },
+      "RegisterInput": {
+        "type": "object",
+        "required": ["username", "email", "password"],
+        "properties": {
+          "username": {
+            "type": "string",
+            "description": "Username",
+            "minLength": 3
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password (min 6 characters)",
+            "minLength": 6
+          },
+          "role": {
+            "type": "string",
+            "enum": ["admin", "professor", "student"],
+            "description": "User role",
+            "default": "student"
+          }
+        }
+      },
+      "LoginInput": {
+        "type": "object",
+        "required": ["email", "password"],
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "description": "Email address"
+          },
+          "password": {
+            "type": "string",
+            "description": "Password"
+          }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "success": { "type": "boolean" },
+          "message": { "type": "string" },
+          "data": {
+            "type": "object",
+            "properties": {
+              "user": { "$ref": "#/components/schemas/User" },
+              "token": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT",
+        "description": "JWT token obtained from /api/auth/login"
+      }
+    }
+  },
+  "security": [
+    {
+      "BearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "description": "Register a new user with username, email, and password",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or user already exists"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Login user",
+        "description": "Authenticate user with email and password",
+        "tags": ["Authentication"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid email or password"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/auth/profile": {
+      "get": {
+        "summary": "Get current user profile",
+        "description": "Get profile of currently authenticated user",
+        "tags": ["Authentication"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User profile retrieved",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - invalid or missing token"
+          },
+          "404": {
+            "description": "User not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/courses": {
+      "get": {
+        "summary": "Get all courses",
+        "description": "Returns all courses, optionally filtered by field and level (Public)",
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "field",
+            "in": "query",
+            "description": "Filter by field (computer_science or social_sciences)",
+            "schema": {
+              "type": "string",
+              "enum": ["computer_science", "social_sciences"]
+            }
+          },
+          {
+            "name": "level",
+            "in": "query",
+            "description": "Filter by level (beginner, intermediate, advanced)",
+            "schema": {
+              "type": "string",
+              "enum": ["beginner", "intermediate", "advanced"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "count": { "type": "integer" },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Course"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new course",
+        "description": "Creates a new course with validation (Protected: Professor or Admin only)",
+        "tags": ["Courses"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Course created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "data": {
+                      "$ref": "#/components/schemas/Course"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid token"
+          },
+          "403": {
+            "description": "Forbidden - professor or admin privileges required"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/courses/{code}": {
+      "get": {
+        "summary": "Get course by code",
+        "description": "Get a specific course by its code (Public)",
+        "tags": ["Courses"],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Course code",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Course found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Course"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Course not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a course",
+        "description": "Update an existing course (Protected: Professor or Admin only)",
+        "tags": ["Courses"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Course code",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CourseInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Course updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "data": {
+                      "$ref": "#/components/schemas/Course"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid token"
+          },
+          "403": {
+            "description": "Forbidden - professor or admin privileges required"
+          },
+          "404": {
+            "description": "Course not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a course",
+        "description": "Delete a course (Protected: Admin only)",
+        "tags": ["Courses"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "code",
+            "in": "path",
+            "required": true,
+            "description": "Course code",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Course deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "data": {
+                      "$ref": "#/components/schemas/Course"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid token"
+          },
+          "403": {
+            "description": "Forbidden - admin privileges required"
+          },
+          "404": {
+            "description": "Course not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/students": {
+      "get": {
+        "summary": "Get all students",
+        "description": "Returns all students, optionally filtered by field (Protected: Authenticated users only)",
+        "tags": ["Students"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "field",
+            "in": "query",
+            "description": "Filter by field",
+            "schema": {
+              "type": "string",
+              "enum": ["computer_science", "social_sciences"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "count": { "type": "integer" },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Student"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid token"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create a new student",
+        "description": "Creates a new student (Protected: Professor or Admin only)",
+        "tags": ["Students"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Student created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "data": {
+                      "$ref": "#/components/schemas/Student"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid token"
+          },
+          "403": {
+            "description": "Forbidden - professor or admin privileges required"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/students/{id}": {
+      "get": {
+        "summary": "Get student by ID",
+        "description": "Get a specific student by ID (Protected: Authenticated users only)",
+        "tags": ["Students"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Student ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Student found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Student"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid token"
+          },
+          "404": {
+            "description": "Student not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "put": {
+        "summary": "Update a student",
+        "description": "Update an existing student (Protected: Professor or Admin only)",
+        "tags": ["Students"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Student ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/StudentInput"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Student updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "data": {
+                      "$ref": "#/components/schemas/Student"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error"
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid token"
+          },
+          "403": {
+            "description": "Forbidden - professor or admin privileges required"
+          },
+          "404": {
+            "description": "Student not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete a student",
+        "description": "Delete a student (Protected: Admin only)",
+        "tags": ["Students"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Student ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Student deleted",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "data": {
+                      "$ref": "#/components/schemas/Student"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid token"
+          },
+          "403": {
+            "description": "Forbidden - admin privileges required"
+          },
+          "404": {
+            "description": "Student not found"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
+    },
+    "/api/students/{id}/enroll": {
+      "put": {
+        "summary": "Enroll student in a course",
+        "description": "Enroll a student in a course (Protected: Authenticated users only)",
+        "tags": ["Students"],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "Student ID",
+            "schema": { "type": "string" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "courseCode": {
+                    "type": "string",
+                    "description": "Course code to enroll in"
+                  },
+                  "courseTitle": {
+                    "type": "string",
+                    "description": "Course title"
+                  }
+                },
+                "required": ["courseCode", "courseTitle"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Student enrolled successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": { "type": "boolean" },
+                    "message": { "type": "string" },
+                    "data": {
+                      "$ref": "#/components/schemas/Student"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error or already enrolled"
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid token"
+          },
+          "404": {
+            "description": "Student not found"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       }
