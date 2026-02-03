@@ -1,7 +1,9 @@
-﻿const express = require('express');
+﻿// routes/auth.js
+const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const { auth } = require('../middleware/auth');
 const { JWT_SECRET } = require('../middleware/auth');
 
 // Register new user
@@ -135,20 +137,11 @@ router.post('/login', async (req, res) => {
     }
 });
 
-// Get current user profile
-router.get('/profile', async (req, res) => {
+// Get current user profile - PROTECTED avec middleware auth
+router.get('/profile', auth, async (req, res) => {
     try {
-        const token = req.header('Authorization')?.replace('Bearer ', '');
-        
-        if (!token) {
-            return res.status(401).json({
-                success: false,
-                error: 'No token provided.'
-            });
-        }
-        
-        const decoded = jwt.verify(token, JWT_SECRET);
-        const user = await User.findById(decoded.userId).select('-password');
+        // Le middleware auth a déjà vérifié le token et ajouté req.user
+        const user = await User.findById(req.user._id).select('-password');
         
         if (!user) {
             return res.status(404).json({
@@ -162,9 +155,9 @@ router.get('/profile', async (req, res) => {
             data: user
         });
     } catch (error) {
-        res.status(401).json({
+        res.status(500).json({
             success: false,
-            error: 'Invalid token.'
+            error: error.message
         });
     }
 });
